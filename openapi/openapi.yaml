@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: AI-Assisted URL Shortener API
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/shorten:
+    post:
+      summary: Create a short URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                longUrl:
+                  type: string
+                customAlias:
+                  type: string
+              required: [longUrl]
+      responses:
+        '201':
+          description: Short URL created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  shortUrl:
+                    type: string
+                  alias:
+                    type: string
+        '400':
+          description: Validation error
+        '409':
+          description: Alias collision
+
+  /{token}:
+    get:
+      summary: Redirect to original URL
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect
+        '404':
+          description: Not found
+
+  /api/v1/urls/{id}/metrics:
+    get:
+      summary: Get metrics for a short URL (protected)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Metrics returned
+
+  /api/v1/urls/{id}:
+    delete:
+      summary: Delete/expire a short URL (protected)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: Not found
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
