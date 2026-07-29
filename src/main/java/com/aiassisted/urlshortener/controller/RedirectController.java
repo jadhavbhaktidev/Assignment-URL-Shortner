@@ -2,6 +2,7 @@ package com.aiassisted.urlshortener.controller;
 
 import com.aiassisted.urlshortener.model.UrlMapping;
 import com.aiassisted.urlshortener.repository.UrlMappingRepository;
+import com.aiassisted.urlshortener.service.AnalyticsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import java.net.URI;
 public class RedirectController {
 
     private final UrlMappingRepository repository;
+    private final AnalyticsService analyticsService;
 
-    public RedirectController(UrlMappingRepository repository) {
+    public RedirectController(UrlMappingRepository repository, AnalyticsService analyticsService) {
         this.repository = repository;
+        this.analyticsService = analyticsService;
     }
 
     @GetMapping("/{token}")
@@ -25,6 +28,8 @@ public class RedirectController {
         UrlMapping urlMapping = repository.findByToken(token)
                 .or(() -> repository.findByAlias(token))
                 .orElseThrow(() -> new IllegalArgumentException("Short URL not found."));
+
+        analyticsService.recordEvent(urlMapping, request.getRemoteAddr(), request.getHeader("User-Agent"), request.getHeader("Referer"), null);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(urlMapping.getLongUrl()));
