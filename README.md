@@ -1,62 +1,72 @@
 # AI-Assisted URL Shortener
 
 ## Overview
+This repository contains a working URL shortener prototype with:
+- Spring Boot backend API
+- H2 + Flyway persistence
+- Angular frontend for end-to-end interaction
+- Integration and frontend unit tests
 
-A prototype URL shortener backend built with Java Spring Boot. It supports:
+Core capabilities:
+- Create short URL with optional custom alias
+- Redirect from token/alias to long URL
+- API key-protected metrics and delete endpoints
+- Click and unique-visitor analytics capture
 
-- Short URL creation with optional custom alias
-- Redirects via token or alias
-- API key-protected metrics endpoint
-- Event capture and aggregate analytics
-- H2-based local persistence and Flyway migrations
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
+- Java 17+
+- Maven 3.9+
+- Node.js 18+
 
-- Java 17
-- Maven
-
-### Run locally
-
+### 1) Run backend
 ```bash
 mvn spring-boot:run
 ```
+Backend URL: `http://localhost:8080`
 
-The application starts at `http://localhost:8080`.
+### 2) Run frontend
+```bash
+cd frontend
+npm install
+npm start
+```
+Frontend URL: `http://localhost:4200`
 
-### Create a short URL
+### 3) Use API key for protected endpoints
+Default key: `change-me`
 
-POST `http://localhost:8080/api/v1/shorten`
+Configured in:
+- `src/main/resources/application.yml`
 
-Request body:
+## Validation Commands
 
-```json
-{
-  "longUrl": "https://example.com",
-  "customAlias": "example"
-}
+Backend tests:
+```bash
+mvn test
 ```
 
-### Redirect
+Frontend tests:
+```bash
+cd frontend
+npm test -- --watch=false --browsers=ChromeHeadless
+```
 
-Open `http://localhost:8080/{token}` in a browser.
+Frontend production build:
+```bash
+cd frontend
+npm run build
+```
 
-### Metrics
+## API and Design Artifacts
+- API contract: `openapi/openapi.yaml`
+- DB schema notes: `schemas/db_schema.md`
+- Assignment compliance package: `docs/assignment1/README.md`
 
-GET `http://localhost:8080/api/v1/urls/{id}/metrics`
-Header: `X-API-KEY: change-me`
-
-## Structure
-
+## Project Structure
 - `src/main/java`: backend code
-- `src/main/resources`: configuration and Flyway migrations
-- `docs/requirements`: requirements artifacts
-- `docs/architecture`: architecture artifacts
-- `openapi/openapi.yaml`: API contract
-- `schemas/db_schema.md`: database schema
-
-## Notes
-
-The default API key is configured in `src/main/resources/application.yml`.
-Change it for production use.
+- `src/main/resources`: config and Flyway migration
+- `src/test/java`: backend integration tests
+- `frontend/`: Angular app and tests
+- `docs/assignment1/`: Assignment 1 audit and compliance documentation
