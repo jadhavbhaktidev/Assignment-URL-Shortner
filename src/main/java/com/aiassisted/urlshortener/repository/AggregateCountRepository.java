@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface AggregateCountRepository extends JpaRepository<AggregateCount, Long> {
-    Optional<AggregateCount> findByUrlMappingAndDay(UrlMapping urlMapping, LocalDate day);
+    Optional<AggregateCount> findByUrlMappingAndAggregateDay(UrlMapping urlMapping, LocalDate aggregateDay);
 }

@@ -4,7 +4,6 @@ import com.aiassisted.urlshortener.dto.ShortenRequest;
 import com.aiassisted.urlshortener.dto.ShortenResponse;
 import com.aiassisted.urlshortener.model.UrlMapping;
 import com.aiassisted.urlshortener.repository.UrlMappingRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,11 +15,9 @@ public class UrlShortenerService {
 
     private final UrlMappingRepository repository;
     private final SecureRandom secureRandom = new SecureRandom();
-    private final String baseUrl;
 
-    public UrlShortenerService(UrlMappingRepository repository, @Value("${urlshortener.base-url:http://localhost:8080}") String baseUrl) {
+    public UrlShortenerService(UrlMappingRepository repository) {
         this.repository = repository;
-        this.baseUrl = baseUrl;
     }
 
     public ShortenResponse shortenUrl(ShortenRequest request) {
@@ -39,7 +36,7 @@ public class UrlShortenerService {
         urlMapping.setLongUrl(request.getLongUrl());
         UrlMapping saved = repository.save(urlMapping);
 
-        return new ShortenResponse(saved.getId(), baseUrl + "/" + alias, alias);
+        return new ShortenResponse(saved.getId(), alias, alias);
     }
 
     private String generateUniqueToken() {

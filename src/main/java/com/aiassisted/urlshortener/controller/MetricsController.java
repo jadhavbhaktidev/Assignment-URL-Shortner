@@ -24,7 +24,7 @@ public class MetricsController {
     }
 
     @GetMapping("/urls/{id}/metrics")
-    public ResponseEntity<MetricsResponse> getMetrics(@PathVariable Long id, @RequestHeader(value = "X-API-KEY", required = false) String headerApiKey) {
+    public ResponseEntity<MetricsResponse> getMetrics(@PathVariable("id") Long id, @RequestHeader(value = "X-API-KEY", required = false) String headerApiKey) {
         if (!apiKey.equals(headerApiKey)) {
             return ResponseEntity.status(401).build();
         }

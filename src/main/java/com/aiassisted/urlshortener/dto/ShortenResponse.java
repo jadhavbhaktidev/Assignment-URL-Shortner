@@ -5,6 +5,9 @@ public class ShortenResponse {
     private String shortUrl;
     private String alias;
 
+    public ShortenResponse() {
+    }
+
     public ShortenResponse(Long id, String shortUrl, String alias) {
         this.id = id;
         this.shortUrl = shortUrl;
@@ -12,6 +15,9 @@ public class ShortenResponse {
     }
 
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public String getShortUrl() { return shortUrl; }
+    public void setShortUrl(String shortUrl) { this.shortUrl = shortUrl; }
     public String getAlias() { return alias; }
+    public void setAlias(String alias) { this.alias = alias; }
 }

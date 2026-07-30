@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "aggregates", uniqueConstraints = @UniqueConstraint(columnNames = {"url_id", "day"}))
+@Table(name = "aggregates", uniqueConstraints = @UniqueConstraint(columnNames = {"url_id", "aggregate_day"}))
 public class AggregateCount {
 
     @Id
@@ -15,8 +15,8 @@ public class AggregateCount {
     @JoinColumn(name = "url_id", nullable = false)
     private UrlMapping urlMapping;
 
-    @Column(nullable = false)
-    private LocalDate day;
+    @Column(name = "aggregate_day", nullable = false)
+    private LocalDate aggregateDay;
 
     @Column(nullable = false)
     private Long clicks = 0L;
@@ -28,8 +28,8 @@ public class AggregateCount {
     public void setId(Long id) { this.id = id; }
     public UrlMapping getUrlMapping() { return urlMapping; }
     public void setUrlMapping(UrlMapping urlMapping) { this.urlMapping = urlMapping; }
-    public LocalDate getDay() { return day; }
-    public void setDay(LocalDate day) { this.day = day; }
+    public LocalDate getAggregateDay() { return aggregateDay; }
+    public void setAggregateDay(LocalDate aggregateDay) { this.aggregateDay = aggregateDay; }
     public Long getClicks() { return clicks; }
     public void setClicks(Long clicks) { this.clicks = clicks; }
     public Long getUniques() { return uniques; }

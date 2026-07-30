@@ -30,11 +30,11 @@ public class AnalyticsService {
         eventRepository.save(event);
 
         LocalDate today = LocalDate.now();
-        AggregateCount aggregateCount = aggregateCountRepository.findByUrlMappingAndDay(urlMapping, today)
+        AggregateCount aggregateCount = aggregateCountRepository.findByUrlMappingAndAggregateDay(urlMapping, today)
                 .orElseGet(() -> {
                     AggregateCount agg = new AggregateCount();
                     agg.setUrlMapping(urlMapping);
-                    agg.setDay(today);
+                    agg.setAggregateDay(today);
                     return agg;
                 });
 

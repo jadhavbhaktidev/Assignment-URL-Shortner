@@ -5,6 +5,9 @@ public class MetricsResponse {
     private Long clicks;
     private Long uniques;
 
+    public MetricsResponse() {
+    }
+
     public MetricsResponse(Long urlId, Long clicks, Long uniques) {
         this.urlId = urlId;
         this.clicks = clicks;
@@ -12,6 +15,9 @@ public class MetricsResponse {
     }
 
     public Long getUrlId() { return urlId; }
+    public void setUrlId(Long urlId) { this.urlId = urlId; }
     public Long getClicks() { return clicks; }
+    public void setClicks(Long clicks) { this.clicks = clicks; }
     public Long getUniques() { return uniques; }
+    public void setUniques(Long uniques) { this.uniques = uniques; }
 }

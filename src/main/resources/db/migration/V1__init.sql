@@ -5,8 +5,8 @@ CREATE TABLE urls (
   token VARCHAR(128) NOT NULL UNIQUE,
   alias VARCHAR(100) UNIQUE,
   long_url TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  expires_at TIMESTAMPTZ,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  expires_at TIMESTAMP WITH TIME ZONE,
   api_key_owner VARCHAR(256),
   clicks_count BIGINT DEFAULT 0
 );
@@ -17,7 +17,7 @@ CREATE INDEX idx_urls_alias ON urls(alias);
 CREATE TABLE events (
   id BIGSERIAL PRIMARY KEY,
   url_id BIGINT NOT NULL REFERENCES urls(id) ON DELETE CASCADE,
-  occurred_at TIMESTAMPTZ DEFAULT now(),
+  occurred_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   ip_hash VARCHAR(128),
   user_agent TEXT,
   referrer TEXT,
@@ -30,10 +30,10 @@ CREATE INDEX idx_events_occurred_at ON events(occurred_at);
 CREATE TABLE aggregates (
   id BIGSERIAL PRIMARY KEY,
   url_id BIGINT NOT NULL REFERENCES urls(id) ON DELETE CASCADE,
-  day DATE NOT NULL,
+  aggregate_day DATE NOT NULL,
   clicks BIGINT DEFAULT 0,
   uniques BIGINT DEFAULT 0,
-  UNIQUE (url_id, day)
+  UNIQUE (url_id, aggregate_day)
 );
 
-CREATE INDEX idx_aggregates_url_day ON aggregates(url_id, day);
+CREATE INDEX idx_aggregates_url_day ON aggregates(url_id, aggregate_day);

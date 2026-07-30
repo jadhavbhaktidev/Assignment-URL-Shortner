@@ -18,7 +18,7 @@ public class ManagementController {
     }
 
     @DeleteMapping("/urls/{id}")
-    public ResponseEntity<Void> deleteUrl(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteUrl(@PathVariable("id") Long id) {
         return repository.findById(id)
                 .map(url -> {
                     repository.delete(url);

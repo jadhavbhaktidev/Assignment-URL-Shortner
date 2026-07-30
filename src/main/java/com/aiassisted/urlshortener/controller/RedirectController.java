@@ -24,7 +24,7 @@ public class RedirectController {
     }
 
     @GetMapping("/{token}")
-    public ResponseEntity<Void> redirect(@PathVariable String token, HttpServletRequest request) {
+    public ResponseEntity<Void> redirect(@PathVariable("token") String token, HttpServletRequest request) {
         UrlMapping urlMapping = repository.findByToken(token)
                 .or(() -> repository.findByAlias(token))
                 .orElseThrow(() -> new IllegalArgumentException("Short URL not found."));
