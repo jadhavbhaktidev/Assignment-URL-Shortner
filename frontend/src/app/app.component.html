@@ -1,0 +1,51 @@
+﻿<main class="app-shell">
+  <section class="card">
+    <h1>AI URL Shortener</h1>
+    <p>Create a short link for any long URL in seconds.</p>
+
+    <form (ngSubmit)="shortenUrl()" #shortenForm="ngForm">
+      <label for="longUrl">Long URL</label>
+      <input id="longUrl" name="longUrl" type="url" [(ngModel)]="longUrl" required placeholder="https://example.com" />
+
+      <label for="customAlias">Custom alias (optional)</label>
+      <input id="customAlias" name="customAlias" type="text" [(ngModel)]="customAlias" placeholder="my-link" />
+
+      <button type="submit" [disabled]="isLoading || !longUrl">{{ isLoading ? 'Creating...' : 'Shorten URL' }}</button>
+    </form>
+
+    <div *ngIf="error" class="message error">{{ error }}</div>
+
+    <div *ngIf="shortUrl" class="result">
+      <h2>Your short URL</h2>
+      <a [href]="shortUrl" target="_blank" rel="noopener noreferrer">{{ shortUrl }}</a>
+      <p>Alias: <strong>{{ alias }}</strong></p>
+      <p>ID: <strong>{{ urlId }}</strong></p>
+    </div>
+
+    <div class="separator"></div>
+
+    <section class="small-card">
+      <h2>Metrics & management</h2>
+      <label for="lookupUrlId">URL ID</label>
+      <input id="lookupUrlId" name="lookupUrlId" type="number" [(ngModel)]="lookupUrlId" placeholder="Enter URL ID" />
+
+      <label for="apiKey">API key</label>
+      <input id="apiKey" name="apiKey" type="text" [(ngModel)]="apiKey" placeholder="change-me" />
+
+      <div class="button-row">
+        <button type="button" (click)="fetchMetrics()">Fetch Metrics</button>
+        <button type="button" (click)="deleteUrl()">Delete URL</button>
+      </div>
+
+      <div *ngIf="metricsError" class="message error">{{ metricsError }}</div>
+      <div *ngIf="deleteMessage" class="message info">{{ deleteMessage }}</div>
+
+      <div *ngIf="metrics" class="result">
+        <h3>Metrics</h3>
+        <p>URL ID: {{ metrics.urlId }}</p>
+        <p>Clicks: {{ metrics.clicks }}</p>
+        <p>Uniques: {{ metrics.uniques }}</p>
+      </div>
+    </section>
+  </section>
+</main>
