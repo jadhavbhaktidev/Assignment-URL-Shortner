@@ -2,6 +2,7 @@ package com.aiassisted.urlshortener.service;
 
 import com.aiassisted.urlshortener.dto.ShortenRequest;
 import com.aiassisted.urlshortener.dto.ShortenResponse;
+import com.aiassisted.urlshortener.exception.ConflictException;
 import com.aiassisted.urlshortener.model.UrlMapping;
 import com.aiassisted.urlshortener.repository.UrlMappingRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UrlShortenerService {
         String alias = request.getCustomAlias();
         if (StringUtils.hasText(alias)) {
             if (repository.existsByAlias(alias) || repository.existsByToken(alias)) {
-                throw new IllegalArgumentException("Custom alias is already in use.");
+                throw new ConflictException("Custom alias is already in use.");
             }
         } else {
             alias = generateUniqueToken();

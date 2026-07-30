@@ -1,8 +1,10 @@
 package com.aiassisted.urlshortener.controller;
 
 import com.aiassisted.urlshortener.dto.MetricsResponse;
+import com.aiassisted.urlshortener.exception.ResourceNotFoundException;
 import com.aiassisted.urlshortener.model.UrlMapping;
 import com.aiassisted.urlshortener.repository.UrlMappingRepository;
+import com.aiassisted.urlshortener.service.AnalyticsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MetricsController {
 
     private final UrlMappingRepository repository;
+    private final AnalyticsService analyticsService;
     private final String apiKey;
 
-    public MetricsController(UrlMappingRepository repository, @Value("${urlshortener.api-key}") String apiKey) {
+    public MetricsController(UrlMappingRepository repository,
+                             AnalyticsService analyticsService,
+                             @Value("${urlshortener.api-key}") String apiKey) {
         this.repository = repository;
+        this.analyticsService = analyticsService;
         this.apiKey = apiKey;
     }
 
@@ -29,8 +35,12 @@ public class MetricsController {
             return ResponseEntity.status(401).build();
         }
 
-        UrlMapping urlMapping = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("URL not found."));
-        MetricsResponse response = new MetricsResponse(urlMapping.getId(), urlMapping.getClicksCount(), 0L);
+        UrlMapping urlMapping = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("URL not found."));
+        MetricsResponse response = new MetricsResponse(
+            urlMapping.getId(),
+            urlMapping.getClicksCount(),
+            analyticsService.countUniqueVisitors(urlMapping.getId())
+        );
         return ResponseEntity.ok(response);
     }
 }

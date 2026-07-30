@@ -1,5 +1,6 @@
 package com.aiassisted.urlshortener.controller;
 
+import com.aiassisted.urlshortener.exception.ResourceNotFoundException;
 import com.aiassisted.urlshortener.model.UrlMapping;
 import com.aiassisted.urlshortener.repository.UrlMappingRepository;
 import com.aiassisted.urlshortener.service.AnalyticsService;
@@ -27,7 +28,7 @@ public class RedirectController {
     public ResponseEntity<Void> redirect(@PathVariable("token") String token, HttpServletRequest request) {
         UrlMapping urlMapping = repository.findByToken(token)
                 .or(() -> repository.findByAlias(token))
-                .orElseThrow(() -> new IllegalArgumentException("Short URL not found."));
+            .orElseThrow(() -> new ResourceNotFoundException("Short URL not found."));
 
         analyticsService.recordEvent(urlMapping, request.getRemoteAddr(), request.getHeader("User-Agent"), request.getHeader("Referer"), null);
 

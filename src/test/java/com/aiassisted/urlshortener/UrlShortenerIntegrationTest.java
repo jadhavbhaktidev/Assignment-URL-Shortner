@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,16 +33,37 @@ public class UrlShortenerIntegrationTest {
         ResponseEntity<ShortenResponse> createResponse = restTemplate.postForEntity(url, request, ShortenResponse.class);
         assertThat(createResponse.getStatusCodeValue()).isEqualTo(201);
         assertThat(createResponse.getBody()).isNotNull();
-        System.out.println("createResponse.id=" + createResponse.getBody().getId());
-        System.out.println("createResponse.shortUrl=" + createResponse.getBody().getShortUrl());
         assertThat(createResponse.getBody().getShortUrl()).contains("http://localhost:");
 
         String shortUrl = createResponse.getBody().getShortUrl();
         ResponseEntity<String> redirectResponse = restTemplate.exchange(shortUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
-        System.out.println("redirectResponse.status=" + redirectResponse.getStatusCodeValue());
-        System.out.println("redirectResponse.body=" + redirectResponse.getBody());
-        System.out.println("redirectResponse.location=" + redirectResponse.getHeaders().getLocation());
         assertThat(redirectResponse.getStatusCodeValue()).isEqualTo(302);
         assertThat(redirectResponse.getHeaders().getLocation().toString()).isEqualTo("https://example.com");
+    }
+
+    @Test
+    void duplicateAliasReturnsConflict() {
+        String url = "http://localhost:" + port + "/api/v1/shorten";
+
+        ShortenRequest first = new ShortenRequest();
+        first.setLongUrl("https://example.com/1");
+        first.setCustomAlias("alias1234");
+
+        ShortenRequest second = new ShortenRequest();
+        second.setLongUrl("https://example.com/2");
+        second.setCustomAlias("alias1234");
+
+        ResponseEntity<String> firstResponse = restTemplate.postForEntity(url, first, String.class);
+        ResponseEntity<String> secondResponse = restTemplate.postForEntity(url, second, String.class);
+
+        assertThat(firstResponse.getStatusCodeValue()).isEqualTo(201);
+        assertThat(secondResponse.getStatusCodeValue()).isEqualTo(409);
+    }
+
+    @Test
+    void redirectUnknownTokenReturnsNotFound() {
+        String url = "http://localhost:" + port + "/does-not-exist";
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
     }
 }
