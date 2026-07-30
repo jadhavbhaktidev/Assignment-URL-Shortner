@@ -1,18 +1,16 @@
 Artifact Name: Architecture Overview
 Repository Location: docs/architecture/overview.md
-Purpose: Describe the system architecture, components, data flow, and deployment considerations for the URL Shortener project.
-Created By: Architecture Agent (AI-assisted)
+Purpose: Describe the current implemented architecture, components, and data flow for the URL Shortener project.
+Created By: Architecture Agent (AI-assisted), reviewed and updated by engineer
 Requirement Mapping: Maps to requirement and planning artifacts.
-Validation Status: Draft
+Validation Status: Reviewed
 Dependencies: docs/requirements/requirement_analysis.md, docs/requirements/ambiguity_report.md
-Recommended Commit: docs(architecture): add system architecture overview
-Recommended Branch: feature/architecture -> target: main
 
 ---
 
 # Architecture Overview
 
-This architecture supports a Java Spring Boot backend with a minimal Angular frontend for a URL Shortener service.
+The system is implemented as a Java Spring Boot backend with a minimal Angular frontend for operating core URL shortener flows.
 
 ## Components
 
@@ -20,23 +18,20 @@ This architecture supports a Java Spring Boot backend with a minimal Angular fro
   - API controller layer
   - Service layer for business logic
   - Repository layer (JPA) for persistence
-  - Caching for redirect performance (Caffeine)
   - Analytics capture and aggregation
-  - Health and metrics endpoints
+  - Health endpoint via actuator
 
 - Persistence
   - H2 database for local development and CI
-  - Postgres profile for production-like deployments
   - Flyway for schema migrations
 
 - Frontend (Angular)
   - URL shortening form
-  - Metrics display page
+  - Metrics lookup with API key
+  - URL delete action with API key
 
 - Observability
-  - Micrometer metrics
-  - Structured logs
-  - Health check endpoint
+  - Actuator health and basic Spring logs
 
 ## Data Flow
 
@@ -49,26 +44,24 @@ This architecture supports a Java Spring Boot backend with a minimal Angular fro
 
 ## Security and Operational Controls
 
-- Input validation to prevent open redirects and invalid aliases.
-- Management endpoints protected by a simple `X-API-KEY` header.
-- Rate-limiting for public endpoints.
-- PII minimization for analytics events.
+- Input validation for alias and request body.
+- Management endpoints protected by `X-API-KEY` via interceptor.
+- Redirect analytics store hashed IP values rather than raw addresses.
 
 ## Scalability Path
 
-- Add Redis or distributed cache for cross-node token caching.
-- Introduce an event-driven analytics pipeline for high-volume click processing.
-- Partition analytics storage by date or URL for scale.
+- Add rate limiting for public endpoints.
+- Add distributed cache for cross-node token lookups.
+- Introduce event-driven analytics processing for high-volume traffic.
 
 ## Deployment Profiles
 
 - `dev`: H2 database, local development.
-- `postgres`: Postgres database, Flyway migration.
 - `test`: in-memory DB and test context.
 
 ---
 
 # Validation
 
-- Review architecture against acceptance criteria.
-- Confirm the architecture supports traceability and incremental delivery.
+- Architecture aligns with implemented modules under `src/main/java` and frontend under `frontend/src`.
+- API and schema documents are in `openapi/openapi.yaml` and `schemas/db_schema.md`.

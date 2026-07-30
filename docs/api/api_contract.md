@@ -2,7 +2,7 @@ Artifact Name: API Contract Summary
 Repository Location: docs/api/api_contract.md
 Purpose: Provide a human-readable summary of the URL Shortener API endpoints.
 Created By: API & Schema Agent (AI-assisted)
-Validation Status: Draft
+Validation Status: Reviewed
 
 ---
 
@@ -30,19 +30,23 @@ Base path: `/api/v1`
 ## GET /api/v1/urls/{id}/metrics
 - Returns analytics for a URL.
 - Protected via `X-API-KEY`.
-- Response: aggregated metrics data.
+- Responses:
+  - `200 OK`: aggregated metrics data
+  - `401 Unauthorized`: missing/invalid API key
+  - `404 Not Found`: unknown URL id
 
 ## DELETE /api/v1/urls/{id}
 - Deletes or expires a short URL.
 - Protected via `X-API-KEY`.
 - Responses:
   - `204 No Content` on success
+  - `401 Unauthorized`
   - `404 Not Found`
 
 ## Authentication
 - `X-API-KEY` is required for management/analytics endpoints.
-- Public endpoints remain accessible but should be rate-limited.
+- Public shortening and redirect endpoints remain accessible.
 
 ## Error Handling
 - Use JSON error responses with `code` and `message`.
-- `429 Too Many Requests` for rate limiting.
+- Implemented codes include validation errors, conflicts, and not-found responses.
