@@ -69,6 +69,10 @@ paths:
       responses:
         '200':
           description: Metrics returned
+        '401':
+          description: Unauthorized (missing/invalid API key)
+        '404':
+          description: URL id not found
 
   /api/v1/urls/{id}:
     delete:
@@ -84,6 +88,8 @@ paths:
       responses:
         '204':
           description: Deleted
+        '401':
+          description: Unauthorized (missing/invalid API key)
         '404':
           description: Not found
 
