@@ -22,5 +22,12 @@ management:
   endpoint:
     health:
       show-details: always
+logging:
+  pattern:
+    level: "%5p [req:%X{requestId}]"
 urlshortener:
-  api-key: change-me
+  api-key: ${URLSHORTENER_API_KEY:change-me}
+  rate-limit:
+    enabled: true
+    max-requests: 120
+    window-seconds: 60

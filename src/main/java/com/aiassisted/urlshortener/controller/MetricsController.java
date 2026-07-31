@@ -5,11 +5,9 @@ import com.aiassisted.urlshortener.exception.ResourceNotFoundException;
 import com.aiassisted.urlshortener.model.UrlMapping;
 import com.aiassisted.urlshortener.repository.UrlMappingRepository;
 import com.aiassisted.urlshortener.service.AnalyticsService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,22 +17,15 @@ public class MetricsController {
 
     private final UrlMappingRepository repository;
     private final AnalyticsService analyticsService;
-    private final String apiKey;
 
     public MetricsController(UrlMappingRepository repository,
-                             AnalyticsService analyticsService,
-                             @Value("${urlshortener.api-key}") String apiKey) {
+                             AnalyticsService analyticsService) {
         this.repository = repository;
         this.analyticsService = analyticsService;
-        this.apiKey = apiKey;
     }
 
     @GetMapping("/urls/{id}/metrics")
-    public ResponseEntity<MetricsResponse> getMetrics(@PathVariable("id") Long id, @RequestHeader(value = "X-API-KEY", required = false) String headerApiKey) {
-        if (!apiKey.equals(headerApiKey)) {
-            return ResponseEntity.status(401).build();
-        }
-
+    public ResponseEntity<MetricsResponse> getMetrics(@PathVariable("id") Long id) {
         UrlMapping urlMapping = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("URL not found."));
         MetricsResponse response = new MetricsResponse(
             urlMapping.getId(),

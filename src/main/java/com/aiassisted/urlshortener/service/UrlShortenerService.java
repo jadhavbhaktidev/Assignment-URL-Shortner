@@ -43,7 +43,7 @@ public class UrlShortenerService {
     private String generateUniqueToken() {
         for (int attempt = 0; attempt < 5; attempt++) {
             String token = randomToken();
-            if (!repository.existsByToken(token)) {
+            if (!repository.existsByToken(token) && !repository.existsByAlias(token)) {
                 return token;
             }
         }

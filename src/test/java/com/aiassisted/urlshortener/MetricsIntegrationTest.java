@@ -10,6 +10,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -75,8 +78,15 @@ public class MetricsIntegrationTest {
 
         String deleteUrl = "http://localhost:" + port + "/api/v1/urls/" + createResponse.getBody().getId();
 
-        ResponseEntity<String> unauthorizedDelete = restTemplate.exchange(deleteUrl, HttpMethod.DELETE, new HttpEntity<>(new HttpHeaders()), String.class);
-        assertThat(unauthorizedDelete.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        try {
+            HttpURLConnection conn = (HttpURLConnection) new URL(deleteUrl).openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.connect();
+            assertThat(conn.getResponseCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+            conn.disconnect();
+        } catch (Exception ex) {
+            throw new AssertionError("Unauthorized DELETE request failed", ex);
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-API-KEY", "change-me");
