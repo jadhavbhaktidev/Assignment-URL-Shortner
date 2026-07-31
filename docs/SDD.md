@@ -103,7 +103,7 @@ This document describes the implemented software design of the URL shortener sys
 - H2 state resets per backend restart.
 
 ## 11. Known Limitations
-1. No rate limiting.
+1. Rate limiting is in-memory and single-node (not distributed).
 2. Shared API key model only.
 3. No distributed cache.
 4. No production deployment manifests in repository.

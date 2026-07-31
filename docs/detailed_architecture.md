@@ -1,9 +1,9 @@
 Artifact Name: Detailed Architecture
-Repository Location: docs/architecture/detailed_architecture.md
+Repository Location: docs/detailed_architecture.md
 Purpose: Provide a deep technical view of implemented architecture, component interactions, data model behavior, and operational concerns.
 Created By: Engineering Review (AI-assisted)
 Validation Status: Reviewed
-Dependencies: docs/architecture/overview.md, openapi/openapi.yaml, src/main/java/com/aiassisted/urlshortener/*
+Dependencies: docs/SDD.md, openapi/openapi.yaml, src/main/java/com/aiassisted/urlshortener/*
 
 ---
 

@@ -19,6 +19,7 @@ Base path: `/api/v1`
   - `201 Created`: returns `id`, `shortUrl`, and `alias`
   - `400 Bad Request`: validation error
   - `409 Conflict`: alias collision
+  - `429 Too Many Requests`: public endpoint rate limit exceeded
 
 ## GET /{token}
 - Redirects to the original URL.
@@ -26,6 +27,7 @@ Base path: `/api/v1`
 - Responses:
   - `302 Found` with `Location` header
   - `404 Not Found`
+  - `429 Too Many Requests`: public endpoint rate limit exceeded
 
 ## GET /api/v1/urls/{id}/metrics
 - Returns analytics for a URL.
@@ -50,3 +52,7 @@ Base path: `/api/v1`
 ## Error Handling
 - Use JSON error responses with `code` and `message`.
 - Implemented codes include validation errors, conflicts, and not-found responses.
+
+## Observability
+- `X-Request-ID` response header is always returned.
+- If the client sends `X-Request-ID`, the same value is echoed in the response.
