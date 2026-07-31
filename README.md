@@ -40,11 +40,19 @@ Default key: `change-me`
 Configured in:
 - `src/main/resources/application.yml`
 
+For non-local environments, set:
+- `URLSHORTENER_API_KEY=<strong-secret-value>`
+
 ## Validation Commands
 
 Backend tests:
 ```bash
 mvn test
+```
+
+OpenAPI contract tests only:
+```bash
+mvn -Dtest=OpenApiContractTest test
 ```
 
 Frontend tests:
@@ -59,14 +67,28 @@ cd frontend
 npm run build
 ```
 
+## CI Quality Gates
+- Workflow: `.github/workflows/ci.yml`
+- Gates on push/PR:
+	- Backend tests (includes OpenAPI contract tests)
+	- Frontend unit tests (ChromeHeadless)
+	- Frontend production build
+
 ## API and Design Artifacts
 - API contract: `openapi/openapi.yaml`
 - DB schema notes: `schemas/db_schema.md`
-- Assignment compliance package: `docs/assignment1/README.md`
+- Business requirements: `docs/BRD.md`
+- Product design: `docs/PDD.md`
+- Software design: `docs/SDD.md`
+- Detailed architecture: `docs/detailed_architecture.md`
+- AI engineering governance: `docs/AI_DEVELOPMENT_GOVERNANCE.md`
+- Observability and SLOs: `docs/OBSERVABILITY_SLOS.md`
+- Incident response runbook: `docs/INCIDENT_RESPONSE_RUNBOOK.md`
+- Architecture decisions (ADR): `docs/adr/README.md`
 
 ## Project Structure
 - `src/main/java`: backend code
 - `src/main/resources`: config and Flyway migration
 - `src/test/java`: backend integration tests
 - `frontend/`: Angular app and tests
-- `docs/assignment1/`: Assignment 1 audit and compliance documentation
+- `docs/`: assignment and engineering documentation
