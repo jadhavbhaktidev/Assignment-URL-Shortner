@@ -39,6 +39,8 @@ paths:
           description: Validation error
         '409':
           description: Alias collision
+        '429':
+          description: Too many requests
 
   /{token}:
     get:
@@ -54,6 +56,8 @@ paths:
           description: Redirect
         '404':
           description: Not found
+        '429':
+          description: Too many requests
 
   /api/v1/urls/{id}/metrics:
     get:
